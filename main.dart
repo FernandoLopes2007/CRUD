@@ -51,21 +51,23 @@ class _ContatoPageState extends State<ContatoPage> {
   }
 
   // Função EDIT (Editar)
-  void editarContato(){
-    if (nomeController.text.isNotEmpty && telController.text.isNotEmpty) {
-      setState(() {
-        contatos.add({
-          'nome': nomeController.text,
-          'tel': telController.text,
-        });
-      });
-      // Limpa os campos após adicionar
-      nomeController.clear();
-      telController.clear();
-      // Fecha o teclado
-      FocusScope.of(context).unfocus();
-    }
+  void atualizarContato(int index) {
+  if (nomeController.text.isNotEmpty && telController.text.isNotEmpty) {
+    setState(() {
+      contatos[index] = {
+        'nome': nomeController.text,
+        'tel': telController.text,
+      };
+    });
+
+    // Limpa os campos após editar
+    nomeController.clear();
+    telController.clear();
+
+    // Fecha o teclado
+    FocusScope.of(context).unfocus();
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +96,6 @@ class _ContatoPageState extends State<ContatoPage> {
               labelText: 'Nome',
               border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              
                 ),
               ),
             ),
@@ -114,6 +115,7 @@ class _ContatoPageState extends State<ContatoPage> {
             SizedBox(height: 20),
             ElevatedButton(
               child: Text('Salvar Contato'),
+              
               onPressed: adicionarContato, // Chama a função CREATE
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color.fromARGB(173, 57, 51, 60), // Accent color
@@ -133,12 +135,18 @@ class _ContatoPageState extends State<ContatoPage> {
                       title: Text(contatos[index]['nome']!),
                       subtitle: Text(contatos[index]['tel']!),
                       
-
-                      trailing: IconButton(
-                        icon: Icon(Icons.delete, color: Colors.red),
-                        onPressed: () =>
-                            deletarContato(index), // Chama a função DELETE
-                            
+                     trailing: Row(
+                            mainAxisSize: MainAxisSize.min, // evita ocupar espaço desnecessário
+                            children: [
+                          IconButton(
+                            icon: Icon(Icons.edit, color: Colors.grey),
+                            onPressed: () => atualizarContato(index), // Chama função de atualizar
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete, color: Colors.red),
+                            onPressed: () => deletarContato(index), // Chama função de deletar
+                          ),
+                        ],
                       ),
                     ),
                   );
